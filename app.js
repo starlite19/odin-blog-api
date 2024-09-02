@@ -1,5 +1,7 @@
 const express = require("express");
 const path = require("node:path");
+const bodyParser = require("body-parser");
+
 // const db = require("./db/queries");
 
 // const session = require("express-session");
@@ -11,8 +13,12 @@ const path = require("node:path");
 // const LocalStrategy = require("passport-local").Strategy;
 
 const app = express();
+app.use(bodyParser.json());
+
 // const indexRouter = require("./routes/indexRouter");
-// const createRouter = require("./routes/createRouter");
+const userRouter = require("./routes/userRouter");
+const postRouter = require("./routes/postRouter");
+const commentRouter = require("/routes/commentRouter");
 // const folderRouter = require("./routes/folderRouter");
 // const fileRouter = require("./routes/fileRouter");
 
@@ -35,7 +41,8 @@ app.set("view engine", "ejs");
 //   })
 // );
 // app.use(passport.session());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // passport.use(
 //   new LocalStrategy(async (username, password, done) => {
@@ -70,7 +77,10 @@ app.use(express.urlencoded({ extended: false }));
 // });
 
 // app.use("/", indexRouter);
-// app.use("/create", createRouter);
+app.use("/users", userRouter);
+app.use("/posts", postRouter);
+app.use("/comments", commentRouter);
+
 // app.use("/folder", folderRouter);
 // app.use("/file", fileRouter);
 
@@ -93,22 +103,6 @@ app.use(express.urlencoded({ extended: false }));
 //     res.redirect("/");
 //   });
 // });
-
-app.get("/", (req, res) => {
-  return res.send("Received a GET HTTP method");
-});
-
-app.post("/", (req, res) => {
-  return res.send("Received a POST HTTP method");
-});
-
-app.put("/", (req, res) => {
-  return res.send("Received a PUT HTTP method");
-});
-
-app.delete("/", (req, res) => {
-  return res.send("Received a DELETE HTTP method");
-});
 
 const PORT = 3000;
 app.listen(PORT, () => console.log(`FileStorage - listening on port ${PORT}!`));
