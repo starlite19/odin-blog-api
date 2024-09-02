@@ -35,10 +35,26 @@ async function createPost(req, res) {
   res.json(newPost);
 }
 
+async function getCommentsFromPost(req, res) {
+  const postId = req.params.postId;
+  const comments = await db.getCommentsFromPost(postId);
+  res.json(comments);
+}
+
+async function createCommentUnderPost(req, res) {
+  const user = req.user;
+  const postId = req.params.postId;
+  const { content } = req.body;
+  const comment = await db.createCommentUnderPost(postId, user.id, content);
+  res.json(comment);
+}
+
 module.exports = {
   getAllPosts,
   getPost,
   deletePost,
   updatePost,
   createPost,
+  getCommentsFromPost,
+  createCommentUnderPost,
 };

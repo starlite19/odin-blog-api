@@ -8,4 +8,7 @@ postRouter.get("/:postId", postController.getPost); // get a single post
 postRouter.put("/:postId", postController.updatePost); // update a single post
 postRouter.delete("/:postId", postController.deletePost); // delete a single post
 
+postRouter.get("/:postId/comments", postController.getCommentsFromPost); // all comments for a single post
+postRouter.post("/:postId/comments", postController.createCommentUnderPost); // create comment for post
+
 module.exports = postRouter;
