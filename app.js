@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 // const indexRouter = require("./routes/indexRouter");
 const userRouter = require("./routes/userRouter");
 const postRouter = require("./routes/postRouter");
-const commentRouter = require("/routes/commentRouter");
+const commentRouter = require("./routes/commentRouter");
 // const folderRouter = require("./routes/folderRouter");
 // const fileRouter = require("./routes/fileRouter");
 

@@ -137,6 +137,78 @@ async function deleteComment(commentId) {
   return deletedComment;
 }
 
+async function getAllUsers() {
+  const users = await prisma.user.findMany({
+    include: { posts: true },
+  });
+  return users;
+}
+
+async function getAuthors() {
+  const authors = await prisma.user.findMany({
+    where: {
+      role: {
+        equals: "AUTHOR",
+      },
+    },
+    include: { posts: true },
+  });
+  return authors;
+}
+
+async function getUsers() {
+  const users = await prisma.user.findMany({
+    where: {
+      role: {
+        equals: "USER",
+      },
+    },
+    include: { posts: true },
+  });
+  return users;
+}
+
+async function getUser(userId) {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: parseInt(userId),
+    },
+    include: { posts: true },
+  });
+  return user;
+}
+
+async function createUser(email, pass) {
+  const user = await prisma.user.create({
+    data: {
+      email: email,
+      password: pass,
+    },
+  });
+  return user;
+}
+
+async function updateUser(userId, role) {
+  const user = await prisma.user.update({
+    where: {
+      id: parseInt(userId),
+    },
+    data: {
+      role: role,
+    },
+  });
+  return user;
+}
+
+async function deleteUser(userId) {
+  const user = await prisma.user.delete({
+    where: {
+      id: parseInt(userId),
+    },
+  });
+  return user;
+}
+
 module.exports = {
   getAllPosts,
   getPost,
@@ -148,4 +220,11 @@ module.exports = {
   createCommentUnderPost,
   updateComment,
   deleteComment,
+  getAllUsers,
+  getAuthors,
+  getUsers,
+  getUser,
+  createUser,
+  updateUser,
+  deleteUser,
 };
