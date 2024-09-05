@@ -1,4 +1,5 @@
 const db = require("../db/queries");
+const bcrypt = require("bcryptjs");
 
 async function getAllUsers(req, res) {
   const users = await db.getAllUsers();
@@ -23,8 +24,14 @@ async function getUser(req, res) {
 
 async function createUser(req, res) {
   const { email, password } = req.body;
-  const user = await db.createUser(email, password);
-  res.json(user);
+  bcrypt.hash(password, 10, async (err, hashedPassword) => {
+    if (err) {
+      res.json({ error: "Cannot create user" });
+    }
+    // otherwise, store hashedPassword in DB
+    const user = await db.createUser(email, hashedPassword);
+    res.json(user);
+  });
 }
 
 async function updateUser(req, res) {

@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function getAllPosts() {
-  const posts = await prisma.post.findMany();
+  const posts = await prisma.post.findMany({ include: { comments: true } });
   return posts;
 }
 
@@ -57,7 +57,7 @@ async function updatePost(postId, title, content, published) {
         id: parseInt(postId),
       },
       data: {
-        published: published,
+        published: published.toLowerCase() === "true",
       },
     });
   }
@@ -209,6 +209,16 @@ async function deleteUser(userId) {
   return user;
 }
 
+async function getUserByEmail(email) {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+    include: { posts: true },
+  });
+  return user;
+}
+
 module.exports = {
   getAllPosts,
   getPost,
@@ -227,4 +237,5 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  getUserByEmail,
 };

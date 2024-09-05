@@ -1,6 +1,8 @@
 const express = require("express");
 const path = require("node:path");
 const bodyParser = require("body-parser");
+const passport = require("passport");
+require("./passport");
 
 // const db = require("./db/queries");
 
@@ -9,7 +11,7 @@ const bodyParser = require("body-parser");
 // const { PrismaClient } = require("@prisma/client");
 
 // const passport = require("passport");
-// const bcrypt = require("bcryptjs");
+// // const bcrypt = require("bcryptjs");
 // const LocalStrategy = require("passport-local").Strategy;
 
 const app = express();
@@ -19,6 +21,8 @@ app.use(bodyParser.json());
 const userRouter = require("./routes/userRouter");
 const postRouter = require("./routes/postRouter");
 const commentRouter = require("./routes/commentRouter");
+const authRouter = require("./routes/auth");
+
 // const folderRouter = require("./routes/folderRouter");
 // const fileRouter = require("./routes/fileRouter");
 
@@ -45,22 +49,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // passport.use(
-//   new LocalStrategy(async (username, password, done) => {
-//     try {
-//       const user = await db.findUserByName(username);
+//   new LocalStrategy(
+//     { usernameField: "email", passwordField: "password" },
+//     async (email, password, done) => {
+//       try {
+//         const user = await db.getUserByEmail(email);
 
-//       if (!user) {
-//         return done(null, false, { message: "Incorrect email" });
+//         if (!user) {
+//           return done(null, false, { message: "Incorrect email" });
+//         }
+//         const match = await bcrypt.compare(password, user.password);
+//         if (!match) {
+//           return done(null, false, { message: "Incorrect password" });
+//         }
+//         return done(null, user);
+//       } catch (err) {
+//         return done(err);
 //       }
-//       const match = await bcrypt.compare(password, user.password);
-//       if (!match) {
-//         return done(null, false, { message: "Incorrect password" });
-//       }
-//       return done(null, user);
-//     } catch (err) {
-//       return done(err);
 //     }
-//   })
+//   )
 // );
 
 // passport.serializeUser((user, done) => {
@@ -77,9 +84,14 @@ app.use(express.urlencoded({ extended: true }));
 // });
 
 // app.use("/", indexRouter);
-app.use("/users", userRouter);
-app.use("/posts", postRouter);
-app.use("/comments", commentRouter);
+app.use("/users", passport.authenticate("jwt", { session: false }), userRouter);
+app.use("/posts", passport.authenticate("jwt", { session: false }), postRouter);
+app.use(
+  "/comments",
+  passport.authenticate("jwt", { session: false }),
+  commentRouter
+);
+app.use("/auth", authRouter);
 
 // app.use("/folder", folderRouter);
 // app.use("/file", fileRouter);
@@ -105,4 +117,4 @@ app.use("/comments", commentRouter);
 // });
 
 const PORT = 3000;
-app.listen(PORT, () => console.log(`FileStorage - listening on port ${PORT}!`));
+app.listen(PORT, () => console.log(`Blog API - listening on port ${PORT}!`));
