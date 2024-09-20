@@ -1,14 +1,12 @@
 # ODIN Blog API
-Project deployed on
+Project deployed on https://odin-blog-api-yr9b.onrender.com
 
 - Note that it may take a while to load because the application is asleep
 
 This project demonstrates the concepts of building a basic RESTful API using the following knowledge:
 - Routers, Controllers
 - PostgreSQL, Prisma ORM
-- Express validator
 - Authentication using Passport, Passport-jwt, JSON Web Token and bcrypt
-- 
 
 Functionality:
 - Sign up
