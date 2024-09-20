@@ -104,7 +104,7 @@ async function createCommentUnderPost(postId, userId, content) {
       post: {
         connect: { id: parseInt(postId) },
       },
-      user: {
+      author: {
         connect: { id: parseInt(userId) },
       },
       content: content,
